@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Metal Slug 3
+Comment=Native static recompilation of Metal Slug 3 (Neo Geo)
+Exec=Metal_Slug_3
+Icon=metal-slug-3
+Categories=Game;
+Terminal=false

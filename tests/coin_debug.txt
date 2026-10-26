@@ -1,0 +1,4 @@
+# Diagnostic: try service, then coin, with long holds.
+1200-1260 service
+1400-1460 coin
+1600-1660 coin2

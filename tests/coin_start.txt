@@ -1,0 +1,11 @@
+# Metal Slug 3 headless input script
+# Wait out the MVS BIOS eyecatcher, insert a coin, start, then play.
+900 coin
+1000 start
+1300-1500 right
+1400 a
+1500 b
+1700-1900 right
+1800 a
+2000-2200 up
+2100 c

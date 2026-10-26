@@ -1,0 +1,12 @@
+# Metal Slug 3 - insert a coin after the attract loop is running, then start.
+1500-1520 coin
+1600 start
+# move and fire for a while
+1800-2100 right
+1900 a
+2000 a
+2100 b
+2300-2600 up
+2400 a
+2700-3000 right
+2800 c
