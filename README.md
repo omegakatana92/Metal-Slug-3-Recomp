@@ -29,7 +29,7 @@ every code path in the game.
 | Input / credits | Coin, service, Start, direction and A/B/C/D tested |
 | Gameplay | Soldier select → Mission 1 beach, enemies, shooting, jumping |
 | Graphics | Sprites, backgrounds, palettes, fix layer, raster effects |
-| Audio | Working at the signal level: the real M1 driver runs and programs the YM2610; a 4,000-frame WAV peaks at 9,760 (55,555 Hz stereo). Subjective quality not auditioned |
+| Audio | Working at the signal level: the real M1 driver runs and programs the YM2610; the 4,000-frame WAV is continuous through attract, character select and Mission 1, peaking at 29,938 (55,555 Hz stereo). Subjective quality not auditioned |
 | Native coverage | **99.83%** of executed 68k instructions over a 9,200-frame scripted session (166,484,501 native / 282,357 interpreted) |
 | `--verify` | 1,829,992 blocks checked over 3,200 gameplay frames, **0 mismatches** |
 | Windows | Release exe built with MSVC 19.51 (VS 18 2026) x64 + SDL2 2.30.9; windowed and `--fullscreen` launches tested |
@@ -187,9 +187,11 @@ correctness fallback, not an emulator wrapper: the fixed bank (all of the
 game's main code and the BIOS) is recompiled and runs natively.
 
 `--wav` produces a 67.6 s, 55,555 Hz stereo WAV for the same session. After
-the M1 bank-window fix described in `docs/hardware-notes.md` it is non-silent
-(peak 9,760 over 4,000 frames); the real M1 driver is programming FM, SSG and
-ADPCM. This is a signal-level check, not a subjective listening test.
+the M1 bank-window fix described in `docs/hardware-notes.md` it is continuous
+through attract, character select and Mission 1 (peak 29,938 over 4,000
+frames); the real M1 driver is programming FM, SSG and ADPCM. The 22–29 s
+gap is the same attract-mode silence present in MAME. This is a signal-level
+check, not a subjective listening test.
 
 ## Native coverage
 
@@ -209,11 +211,10 @@ plays the opening beach. It is not a claim about every path in the game.
 ## Known limitations
 
 * **Audio is verified at signal level, not by ear.** The WAV capture is
-  non-silent (peak 9,760) and the driver/Z80 state matches the MAME oracle at
-  frame 1800, but the mix, volume balance and subjective quality were not
-  auditioned. Some stretches of the 67.6 s capture are silent (attract-mode
-  gaps/individual effects), so this is not a claim that every track is perfect.
-  Physical Steam Deck audio still needs a listening test.
+  continuous through attract, character select and Mission 1 (peak 29,938)
+  and the driver/Z80 state matches the MAME oracle at frame 2700, but the
+  mix, volume balance and subjective quality were not auditioned. Physical
+  Steam Deck audio still needs a listening test.
 * **Banked code is interpreted.** The fixed bank and BIOS are native; code
   entered through a non-zero bank window runs in Musashi for correctness.
 * **Steam Deck hardware not tested.** The AppImage was built and launched

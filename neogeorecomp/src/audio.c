@@ -130,12 +130,16 @@ static uint8_t z_read(void *u, uint16_t a) {
     size_t size = rom_size();
     if (a < 0x8000) return r[a % size];
     if (a >= 0xF800) return s_ram[a & 0x7FF];
-    /* MAME's init_audio(): the bank entry is at
-     * 0x10000 + ((bank << (11 + window)) & mask) *in the region*.  The
-     * region's 0x10000 base is the start of the M1 file (ROM_RELOAD), so the
-     * file offset is the masked value alone -- not masked + 0x10000. */
+    /* MAME's init_audio(): each bank entry is
+     * 0x10000 + ((bank << (11 + window)) & address_mask) in the audio region.
+     * ROM_RELOAD puts the first byte of the M1 file at region offset 0x10000,
+     * so the file offset is the masked value alone.
+     * address_mask comes from the region length, which is
+     * (M1 size + 0x10000); for files up to 512 KB that reduces to
+     * (M1 size - 1) & 0x3FFFF. Masking a 128 KB M1 with 0xFFFF would truncate
+     * banks 0x10000-0x1FFFF, which several drivers use for music data. */
     static const uint32_t win_mask[4] = {0x7FF, 0xFFF, 0x1FFF, 0x3FFF};
-    uint32_t reg_mask = size > 0x10000 ? ((uint32_t)(size - 0x10000 - 1) & 0x3FFFF) : 0;
+    uint32_t reg_mask = size ? (((uint32_t)size - 1u) & 0x3FFFFu) : 0;
     uint32_t off;
     if (a >= 0xF000) off = (s_bank[0] & reg_mask) + (a & win_mask[0]);
     else if (a >= 0xE000) off = (s_bank[1] & reg_mask) + (a & win_mask[1]);
@@ -268,6 +272,9 @@ void audio_select_bios_rom(int bios) {
 }
 
 size_t audio_take_samples(int16_t *out, size_t max_frames) {
+    /* Keep the Z80/sequencer running even when the 68000 is not polling a
+     * sound port; pull-based audio otherwise starves the driver. */
+    audio_sync();
     generate_to_now();
     if (s_trace) {
         long long f = (long long)(ng_cycles / NG_CLOCKS_PER_FRAME);

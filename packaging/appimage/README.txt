@@ -8,8 +8,8 @@ BIOS: supply your own legally obtained dump.
 Quick start
 -----------
 1. Put the decrypted runtime ROM files in a folder named "roms" next to the
-   AppImage (or in ~/Emulation/roms/mslug3, ~/roms/mslug3, or ~/roms).
-   The AppRun script finds those automatically.
+   AppImage (or in ~/.local/share/mslug3/roms, ~/Emulation/roms/mslug3,
+   ~/roms/mslug3, or ~/roms). The AppRun script finds those automatically.
 
    To prepare them from the MAME "mslug3" and "neogeo" sets:
 
@@ -43,5 +43,6 @@ Notes
 * The game's 68000 code is statically recompiled. Code reached only through
   swapped bank windows runs in the bundled Musashi interpreter; the measured
   share is reported in the project README.
-* Audio: signal-level WAV output is non-silent (peak 9,760) after the M1
-  bank-window fix; subjective mix/volume has not been auditioned.
+* Audio: the YM2610/M1 path is corrected for the M1 bank mask. The final
+  WAV is continuous from attract through character select and Mission 1
+  (peak 29,938 over 4,000 frames); subjective mix/volume was not auditioned.

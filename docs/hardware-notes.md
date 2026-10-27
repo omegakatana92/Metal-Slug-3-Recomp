@@ -36,20 +36,29 @@ for mslug3 in MAME (commented out in the driver), so the RNG is not modelled.
 KOF99's RNG is explicitly "correct for KOF99, other games might be
 different"; do not reuse it blindly.
 
-## M1 audio bank windows are file offsets
+## M1 audio bank windows: base and mask
 
 MAME's `neogeo_base_state::init_audio()` computes the bank entry as
-`0x10000 + ((bank << (11 + window)) & mask)` **in the audiocpu region**.
-`NEO_BIOS_AUDIO_512K` loads the M1 at 0 and then calls
+`0x10000 + ((bank << (11 + window)) & address_mask)` **in the audiocpu
+region**. `NEO_BIOS_AUDIO_512K` loads the M1 at 0 and then calls
 `ROM_RELOAD(0x10000, 0x80000)`, so region address `0x10000` is byte 0 of the
 M1 file. The Z80's banked window therefore reads file offset
-`(bank << shift) & mask`; adding `0x10000` a second time walks into the M1's
-`0xFF` padding. That is what muted this driver: the sample tables read `$FF`,
-the driver selected empty samples, and FM/ADPCM were programmed silent.
+`(bank << shift) & address_mask`; adding `0x10000` a second time walks into
+the M1's `0xFF` padding.
 
-`audio.c` now uses the masked value alone. Verification: at frame 1800 the
-Z80 PC is `$1056` with an empty command ring, matching MAME's `$1054` idle
-loop, and `--wav` over 4,000 frames is non-silent (peak 9,760).
+The second half of the bug was `address_mask`. MAME's mask is derived from the
+loaded region (the 512 KB image), i.e. `(size - 1) & 0x3FFFF` = `0x3FFFF`.
+The toolkit had used `(size - 0x10000 - 1) & 0x3FFFF` = `0x2FFFF`; that clears
+bit 16, so a bank value of `0x10000` wraps to file offset 0. During character
+select the driver selects exactly such a bank, so it read the M1 base instead
+of the sample table and stopped the BGM. `audio.c` now uses
+`(size - 1) & 0x3ffff` and does not add a second base.
+
+Verification: at frame 2700 (soldier select), all four bank windows, the Z80
+PC (`$1054`/`$1055`), the command ring and the driver RAM match MAME
+byte-for-byte. The 4,000-frame WAV is continuous from attract through
+character select and Mission 1, with peak 29,938; the 22–29 s gap is the
+same attract-mode silence as MAME.
 
 ## 512 KB S ROM and the fixed layer
 

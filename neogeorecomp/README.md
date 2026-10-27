@@ -37,7 +37,7 @@ copyrighted game imagery.*
 |---|---|---|---|---|---|
 | Metal Slug (`mslug`) | yes | yes, Mission 1 played through a 5-minute soak | 100% of that soak after one profile pass | 0 mismatches | no |
 | Neo Drift Out (`neodrift`) | yes | yes, practice and Stage 1 through a 6-minute soak | 100% of that soak after one profile pass | 0 mismatches (46.67M blocks) | no |
-| Metal Slug 3 (`mslug3`) | yes | yes, coin/start, soldier select and Mission 1 in a 9,200-frame soak | 99.83% native (282,357 interpreted instructions; bank-window code falls back for correctness) | 0 mismatches (1,829,992 blocks) | yes (non-silent WAV, peak 9,760) |
+| Metal Slug 3 (`mslug3`) | yes | yes, coin/start, soldier select and Mission 1 in a 9,200-frame soak | 99.83% native (282,357 interpreted instructions; bank-window code falls back for correctness) | 0 mismatches (1,829,992 blocks) | yes (continuous WAV, peak 29,938) |
 
 Metal Slug 3's original set is NEO-SMA/NEO-CMC42 encrypted and has no S ROM.
 That game repo supplies a build-time decryption tool and the generic

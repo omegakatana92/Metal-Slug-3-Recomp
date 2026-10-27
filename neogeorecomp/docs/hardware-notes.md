@@ -80,7 +80,7 @@ After a `VRAMRW` write, the address advances by `VRAMMOD` but keeps bit 15: `add
 
 `in a,($08)` selects a bank from the value of A, which is on the upper address lines during the I/O cycle. `in r,(c)` uses B instead. The Z80 core passes only the low byte, so `audio.c` recovers the upper byte from the opcode just executed.
 
-The bank base is not zero: each entry in the M ROM is at `0x10000 + ((bank << (11 + window)) & ((size - 0x10000 - 1) & 0x3FFFF))`, as in MAME's `init_audio`. The first 64 KB of the M ROM stays at `$0000-$7FFF`; skipping that base makes the banked windows read the wrong half of the driver.
+The bank base is a file offset: each entry in the M ROM is at `(bank << (11 + window)) & ((size - 1) & 0x3FFFF)`. MAME's `init_audio` writes the entry at region address `0x10000 + offset`, and `NEO_BIOS_AUDIO_512K`'s `ROM_RELOAD(0x10000, 0x80000)` puts file byte 0 at region `0x10000`, so the `+0x10000` is the load base, not an extra file offset. The mask must cover the loaded 512 KB image (`0x3FFFF`); using `(size - 0x10000 - 1)` clears bit 16 and makes a bank value of `0x10000` wrap to offset 0. The first 64 KB of the M ROM stays at `$0000-$7FFF`.
 
 ### Sprite rendering is per scanline, from the L0 ROM
 

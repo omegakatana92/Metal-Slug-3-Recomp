@@ -69,7 +69,7 @@ The C-ROM step is MAME's `cmc42_gfx_decrypt` with the kof99/CMC42 tables and
 | 512 KB banked fixed layer (`$7500` code bits) | yes, `NG_FIX_BANK_KOF2000` |
 | 64 MB C ROMs, 19-bit sprite tile index | yes |
 | 512 KB M1, Z80 banking, NMI/reply latch | yes |
-| YM2610 FM/SSG/ADPCM synthesis | implemented; non-silent output (WAV peak 9,760) |
+| YM2610 FM/SSG/ADPCM synthesis | implemented; continuous through select/Mission 1 (WAV peak 29,938) |
 | MVS watchdog reset | yes, generic |
 | 4:3 pillarboxed fullscreen | yes (`--fullscreen`, F11) |
 | Memory card | no |

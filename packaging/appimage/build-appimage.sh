@@ -58,6 +58,7 @@ for a in "$@"; do [ "$a" = "--rom-path" ] && has_rom=1; done
 if [ "$has_rom" = 0 ] && [ -n "${APPIMAGE:-}" ]; then
     for d in "$(dirname "$APPIMAGE")/roms" \
              "$(dirname "$APPIMAGE")/roms/mslug3" \
+             "$HOME/.local/share/mslug3/roms" \
              "$HOME/Emulation/roms/mslug3" \
              "$HOME/roms/mslug3" "$HOME/roms"; do
         if [ -d "$d" ]; then set -- --rom-path "$d" "$@"; has_rom=1; break; fi
